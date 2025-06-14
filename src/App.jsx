@@ -34,10 +34,15 @@ export default function App() {
     if (!hasUserInteracted && audioRef.current) {
       setHasUserInteracted(true);
       try {
-        await audioRef.current.play();
-        setIsPlaying(true);
+        // Thử play với promise
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+          setIsPlaying(true);
+        }
       } catch (error) {
-        console.log("Audio autoplay prevented");
+        console.log("Audio autoplay prevented - in-app browser detected");
+        // Fallback: không auto-play, chỉ hiển thị nút để user tự bấm
       }
     }
   };
@@ -62,16 +67,17 @@ export default function App() {
 
   // Lắng nghe tương tác đầu tiên
   useEffect(() => {
-    const handleInteraction = () => {
-      if (!hasUserInteracted) {
+    const handleInteraction = (event) => {
+      // Chỉ trigger với các tương tác "thật" từ user
+      if (event.isTrusted && !hasUserInteracted) {
         handleFirstInteraction();
       }
     };
 
     // Lắng nghe các sự kiện tương tác - hỗ trợ cả desktop và mobile
     const events = [
-      'click',       // Desktop và mobile
-      'touchend',    // Mobile touch
+      'click',       // Desktop và mobile - most reliable
+      'touchend',    // Mobile touch - reliable
       'keydown',     // Keyboard
       'scroll',      // Desktop scroll
       'mousemove',   // Desktop mouse
@@ -80,6 +86,12 @@ export default function App() {
     
     events.forEach(event => {
       document.addEventListener(event, handleInteraction, { once: true, passive: true });
+    });
+
+    // Thêm event listener riêng cho navigation để đảm bảo
+    const navButtons = document.querySelectorAll('nav button');
+    navButtons.forEach(button => {
+      button.addEventListener('click', handleInteraction, { once: true });
     });
 
     return () => {
@@ -137,11 +149,11 @@ export default function App() {
       {/* Floating Action Button - Music */}
       <button
         onClick={toggleAudio}
-        className={`fixed bottom-6 right-6 p-3 sm:p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-6 right-6 p-3 sm:p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 z-50 ${
           isPlaying 
             ? 'bg-rose-500 text-white animate-pulse' 
             : 'bg-white text-rose-500 hover:bg-rose-50'
-        }`}
+        } ${!hasUserInteracted ? 'ring-2 ring-rose-300 animate-bounce' : ''}`}
       >
         <Music className="w-5 h-5 sm:w-6 sm:h-6" />
       </button>

@@ -9,7 +9,65 @@ const WeddingInvitation = () => {
  const [textPhase, setTextPhase] = useState(0);
  const [showOverlay, setShowOverlay] = useState(false);
  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
-const [currentImageIndex, setCurrentImageIndex] = useState(0);
+ const [currentImageIndex, setCurrentImageIndex] = useState(0);
+ const [imagesLoaded, setImagesLoaded] = useState(false);
+ const [loadedImages, setLoadedImages] = useState(new Set());
+
+ // Danh sách ảnh background cho desktop và mobile
+ const desktopImages = [
+   '/images/background.JPG',
+   '/images/background3.JPG',
+   '/images/15.JPG', 
+   '/images/background2.JPG'
+ ];
+ 
+ const mobileImages = [
+   '/images/mobile.jpg',
+     '/images/16.JPG',
+   '/images/9.jpg', 
+ 
+   '/images/background2.JPG'
+ ];
+
+ // Chọn danh sách ảnh phù hợp
+ const backgroundImages = isDesktop ? desktopImages : mobileImages;
+
+ // Preload images function
+ const preloadImages = (imageList) => {
+   return Promise.all(
+     imageList.map((src) => {
+       return new Promise((resolve, reject) => {
+         const img = new Image();
+         img.onload = () => {
+           setLoadedImages(prev => new Set([...prev, src]));
+           resolve(src);
+         };
+         img.onerror = reject;
+         img.src = src;
+       });
+     })
+   );
+ };
+
+ // Preload all images when component mounts
+ useEffect(() => {
+   const loadImages = async () => {
+     try {
+       // Preload both desktop and mobile images
+       await Promise.all([
+         preloadImages(desktopImages),
+         preloadImages(mobileImages)
+       ]);
+       setImagesLoaded(true);
+     } catch (error) {
+       console.error('Error preloading images:', error);
+       // Fallback: continue anyway after a short delay
+       setTimeout(() => setImagesLoaded(true), 1000);
+     }
+   };
+
+   loadImages();
+ }, []);
 
  useEffect(() => {
    const handleResize = () => {
@@ -38,26 +96,10 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
  const [snowflakes] = useState(generateSnowflakes());
 
- // Danh sách ảnh background cho desktop và mobile
- const desktopImages = [
-   '/images/background.JPG',
-   '/images/background3.JPG',
-      '/images/15.JPG', 
-   '/images/background2.JPG'
- ];
- 
- const mobileImages = [
-    '/images/background.JPG',
-     '/images/9.jpg', 
-    '/images/16.JPG',
-     
-   '/images/background2.JPG'
- ];
-
-  // Chọn danh sách ảnh phù hợp
- const backgroundImages = isDesktop ? desktopImages : mobileImages;
-
  useEffect(() => {
+   // Only start animations after images are loaded
+   if (!imagesLoaded) return;
+
    setIsVisible(true);
    
    // Sequence animation cho text và ảnh - đồng bộ hoàn toàn
@@ -81,7 +123,7 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
        setTimeout(() => {
          setShowOverlay(false);
          // Chuyển sang ảnh tiếp theo
-         setCurrentImageIndex(prev => (prev + 1) % (isDesktop ? desktopImages.length : mobileImages.length));
+         setCurrentImageIndex(prev => (prev + 1) % backgroundImages.length);
        }, 1500);
      }
    ];
@@ -99,19 +141,43 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
      });
    }, 12000);
 
-      return () => {
+   return () => {
      intervals.forEach(clearTimeout);
      clearInterval(cycleInterval);
    };
- }, [isDesktop]);
+ }, [imagesLoaded, isDesktop, backgroundImages.length]);
 
  // Cải thiện animation classes - nhanh hơn và mượt hơn
  const fadeInUp = "transition-all duration-600 ease-out";
  const slideInRight = "transition-all duration-700 ease-out";
  const bounceIn = "transition-all duration-500 ease-out";
 
+ // Loading screen while images preload
+ if (!imagesLoaded) {
+   return (
+     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100 flex items-center justify-center">
+       <div className="text-center space-y-4">
+         <Heart className="w-12 h-12 text-pink-500 animate-pulse mx-auto" />
+         <div className="flex space-x-1">
+           <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '0s'}}></div>
+           <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+           <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+         </div>
+         <p className="text-pink-600 font-medium">Đang chuẩn bị thiệp cưới...</p>
+       </div>
+     </div>
+   );
+ }
+
  return (
    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+     {/* Preload link tags for critical images */}
+     <div style={{ display: 'none' }}>
+       {[...desktopImages, ...mobileImages].map((src, index) => (
+         <link key={index} rel="preload" as="image" href={src} />
+       ))}
+     </div>
+
      {/* Snow Effect */}
      <div className="fixed inset-0 pointer-events-none z-10">
        {snowflakes.map((snowflake) => (
@@ -134,22 +200,25 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
      <div className="pt-16">
        {currentSection === 'invitation' && (
          <div className="relative">
-           {/* Background Images with Smooth Transition - Desktop */}
+           {/* Background Images with Instant Loading */}
            <div className="h-screen relative overflow-hidden">
              {/* Desktop Background Images */}
              <div className="hidden lg:block">
                {desktopImages.map((image, index) => (
                  <div
                    key={`desktop-${index}`}
-                   className={`absolute inset-0 bg-cover bg-no-repeat transition-all duration-1000 ${
+                   className={`absolute inset-0 transition-all duration-1000 ${
                      index === currentImageIndex ? 'opacity-100' : 'opacity-0'
                    }`}
                    style={{
                      backgroundImage: `url('${image}')`,
                      backgroundPosition: 'center center',
                      backgroundSize: 'cover',
+                     backgroundRepeat: 'no-repeat',
                      filter: showOverlay ? 'brightness(1.1) contrast(1.1)' : 'brightness(1) contrast(1)',
-                     transitionDelay: index === currentImageIndex ? '0ms' : '500ms'
+                     transitionDelay: index === currentImageIndex ? '0ms' : '500ms',
+                     willChange: 'opacity, filter', // Optimize for GPU
+                     transform: 'translateZ(0)' // Force hardware acceleration
                    }}
                  />
                ))}
@@ -160,15 +229,18 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
                {mobileImages.map((image, index) => (
                  <div
                    key={`mobile-${index}`}
-                   className={`absolute inset-0 bg-cover bg-no-repeat mobile-bg transition-all duration-1000 ${
+                   className={`absolute inset-0 transition-all duration-1000 ${
                      index === currentImageIndex ? 'opacity-100' : 'opacity-0'
                    }`}
                    style={{
                      backgroundImage: `url('${image}')`,
                      backgroundPosition: 'center center',
                      backgroundSize: 'cover',
+                     backgroundRepeat: 'no-repeat',
                      filter: showOverlay ? 'brightness(1.1) contrast(1.1)' : 'brightness(1) contrast(1)',
-                     transitionDelay: index === currentImageIndex ? '0ms' : '500ms'
+                     transitionDelay: index === currentImageIndex ? '0ms' : '500ms',
+                     willChange: 'opacity, filter',
+                     transform: 'translateZ(0)'
                    }}
                  />
                ))}
@@ -198,9 +270,9 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
                ))}
              </div>
 
-             {/* Image Indicator - Hiển thị ảnh hiện tại */}
+             {/* Image Indicator */}
              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-               {(isDesktop ? desktopImages : mobileImages).map((_, index) => (
+               {backgroundImages.map((_, index) => (
                  <div
                    key={index}
                    className={`w-2 h-2 rounded-full transition-all duration-500 ${
@@ -211,7 +283,7 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
              </div>
            </div>
 
-           {/* Text Overlay - Responsive Positioning */}
+           {/* Text Overlay - Same as before */}
            <div className="absolute inset-0 flex items-center pointer-events-none">
              {/* Desktop: Right Side */}
              <div className="hidden lg:flex lg:justify-end lg:pr-20 xl:pr-32 w-full">
@@ -431,7 +503,7 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
        )}
      </div>
 
-     {/* Enhanced CSS for animations */}
+     {/* Enhanced CSS for animations and performance */}
      <style>{`
        @media (max-width: 1024px) {
          .mobile-bg {
@@ -442,6 +514,19 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
          .mobile-bg {
            background-position: 30% center !important;
          }
+       }
+       
+       /* Preload critical images */
+       body::before {
+         content: '';
+         position: absolute;
+         top: -9999px;
+         left: -9999px;
+         width: 1px;
+         height: 1px;
+         background-image: url('/images/background.JPG'), url('/images/background2.JPG'), url('/images/background3.JPG'), url('/images/15.JPG'), url('/images/9.jpg'), url('/images/16.JPG');
+         background-size: 1px 1px;
+         opacity: 0;
        }
        
        @keyframes float {
@@ -484,17 +569,23 @@ const [currentImageIndex, setCurrentImageIndex] = useState(0);
          animation: snow linear infinite;
        }
        
+       /* Performance optimizations */
+       .animate-pulse {
+         animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+       }
+       
        /* Smooth text shadows for better readability */
        .drop-shadow-2xl {
          filter: drop-shadow(0 25px 25px rgb(0 0 0 / 0.4)) drop-shadow(0 0 10px rgb(0 0 0 / 0.3));
        }
        
-       /* Backdrop blur support */
-       .backdrop-blur-sm {
-         backdrop-filter: blur(4px);
+       /* GPU acceleration for better performance */
+       .transition-all {
+         will-change: transform, opacity;
+         transform: translateZ(0);
        }
      `}</style>
-     <WeddingPhotosScroll />
+         <WeddingPhotosScroll />
 <WeddingCountdown/>
    </div>
  );
