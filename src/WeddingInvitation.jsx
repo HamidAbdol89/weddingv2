@@ -197,7 +197,7 @@ const WeddingInvitation = () => {
      </div>
 
      {/* Main Content */}
-     <div className="pt-16">
+     <div>
        {currentSection === 'invitation' && (
          <div className="relative">
            {/* Background Images with Instant Loading */}
