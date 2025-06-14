@@ -1,24 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text, Box } from '@react-three/drei';
-import { Heart, Calendar, MapPin, Users, Music, Mail, Phone,MessageCircle } from 'lucide-react';
+import { Heart, Calendar, MapPin, Users, Music, Mail, Phone, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import WeddingDetails from './WeddingDetails';
-import Wedding3DPortal from './Wedding3DPortal';
-import FloatingHearts from './FloatingHearts';
 import MailForm from './MailForm';
 import Gallery from './Gallery';
-
-
+import WeddingInvitation from './WeddingInvitation';
 
 // Main Wedding Invitation Component
-export default function WeddingInvitation() {
+export default function App() {
   const [currentSection, setCurrentSection] = useState('invitation');
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const audioRef = useRef(null);
 
-const [modalOpen, setModalOpen] = useState(false);
- const [modalContent, setModalContent] = useState({
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState({
     title: '',
     message: '',
     isError: false,
@@ -30,33 +28,67 @@ const [modalOpen, setModalOpen] = useState(false);
     setModalContent(content);
     setModalOpen(true);
   };
- 
-// Xử lý play/pause âm thanh
-  useEffect(() => {
-    if (isPlaying) {
-      audioRef.current.play().catch(error => {
-        console.error("Autoplay was prevented:", error);
-        // Hiển thị thông báo cho người dùng nếu cần
-      });
-    } else {
-      audioRef.current.pause();
+
+  // Xử lý tương tác đầu tiên để tự động play nhạc
+  const handleFirstInteraction = async () => {
+    if (!hasUserInteracted && audioRef.current) {
+      setHasUserInteracted(true);
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } catch (error) {
+        console.log("Audio autoplay prevented");
+      }
     }
-  }, [isPlaying]);
- 
+  };
+
+  // Xử lý play/pause âm thanh
+  const toggleAudio = async () => {
+    if (!audioRef.current) return;
+
+    try {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        await audioRef.current.play();
+        setIsPlaying(true);
+        setHasUserInteracted(true);
+      }
+    } catch (error) {
+      console.error("Audio error:", error);
+    }
+  };
+
+  // Lắng nghe tương tác đầu tiên
+  useEffect(() => {
+    const handleInteraction = () => {
+      if (!hasUserInteracted) {
+        handleFirstInteraction();
+      }
+    };
+
+    // Lắng nghe các sự kiện tương tác
+    const events = ['click', 'touchstart', 'scroll', 'keydown'];
+    events.forEach(event => {
+      document.addEventListener(event, handleInteraction, { once: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, handleInteraction);
+      });
+    };
+  }, [hasUserInteracted]);
 
   const sections = {
     invitation: 'Thiệp Mời',
     details: 'Chi Tiết',
     gallery: 'Album Ảnh',
-    rsvp: 'Xác Nhận'
+    rsvp: 'Xác Nhận',
   };
 
-
-
-
-
-
- return (
+  return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 overflow-hidden">
       {/* Navigation - Mobile Optimized */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-rose-200 shadow-sm">
@@ -80,64 +112,23 @@ const [modalOpen, setModalOpen] = useState(false);
       </nav>
 
       {/* Main Content */}
-      <div className="pt-16">
-        {currentSection === 'invitation' && (
-          <div className="relative">
-            {/* 3D Scene - Mobile Responsive */}
-            <div className="h-screen">
-              <Canvas camera={{ position: [0, 0, 8], fov: 65 }}>
-                <ambientLight intensity={0.7} />
-                <pointLight position={[8, 8, 8]} intensity={0.8} />
-                <pointLight position={[-8, -8, -8]} intensity={0.4} color="#ff69b4" />
-                <Wedding3DPortal/>
-                <FloatingHearts />
-                <OrbitControls 
-                  enableZoom={false}
-                  enablePan={false}
-                  maxPolarAngle={Math.PI / 2}
-                  minPolarAngle={Math.PI / 2}
-                  autoRotate={true}
-                  autoRotateSpeed={0.5}
-                />
-              </Canvas>
+      {currentSection === 'invitation' && <WeddingInvitation />}
+      {currentSection === 'details' && <WeddingDetails />}
+      {currentSection === 'gallery' && <Gallery />}
+      {currentSection === 'rsvp' && <MailForm />}
 
-            </div>
-
-            {/* Overlay Text - Mobile Responsive */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
-              <div className="text-center space-y-3 bg-white/10 backdrop-blur-sm rounded-2xl p-4 sm:p-8 border border-white/20 max-w-sm sm:max-w-md">
-                <h1 className="text-4xl sm:text-6xl font-serif text-rose-600 mb-2 sm:mb-4 animate-pulse">
-                  DUSÔ & HASIKIN
-                </h1>
-                <p className="text-sm sm:text-xl text-rose-800 mb-4 sm:mb-6 leading-relaxed">
-                  Trân trọng kính mời bạn tham dự lễ cưới của chúng tôi
-                </p>
-                <div className="flex items-center justify-center space-x-2 text-rose-700">
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="text-sm sm:text-lg">25 Tháng 12, 2025</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* CHI TIẾT*/}
-          {currentSection === 'details' && < WeddingDetails />}
-        {/* ALBUM ẢNH*/}
-          { currentSection === 'gallery' && < Gallery /> }
-        {/* MAIL*/}
-          {currentSection === 'rsvp' && < MailForm/>}
-
-      </div>
-  <audio 
+      {/* Audio Element */}
+      <audio 
         ref={audioRef} 
         src="/wedding.mp3" 
         loop 
         preload="auto"
+        volume="0.3"
       />
-      {/* Floating Action Button - Music - Mobile Optimized */}
+
+      {/* Floating Action Button - Music */}
       <button
-        onClick={() => setIsPlaying(!isPlaying)}
+        onClick={toggleAudio}
         className={`fixed bottom-6 right-6 p-3 sm:p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 ${
           isPlaying 
             ? 'bg-rose-500 text-white animate-pulse' 
