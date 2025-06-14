@@ -68,10 +68,18 @@ export default function App() {
       }
     };
 
-    // Lắng nghe các sự kiện tương tác
-    const events = ['click', 'touchstart', 'scroll', 'keydown'];
+    // Lắng nghe các sự kiện tương tác - hỗ trợ cả desktop và mobile
+    const events = [
+      'click',       // Desktop và mobile
+      'touchend',    // Mobile touch
+      'keydown',     // Keyboard
+      'scroll',      // Desktop scroll
+      'mousemove',   // Desktop mouse
+      'touchstart'   // Mobile touch backup
+    ];
+    
     events.forEach(event => {
-      document.addEventListener(event, handleInteraction, { once: true });
+      document.addEventListener(event, handleInteraction, { once: true, passive: true });
     });
 
     return () => {
