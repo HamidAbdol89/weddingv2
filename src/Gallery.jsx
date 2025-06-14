@@ -94,93 +94,81 @@ const Gallery = () => {
     setTouchStart({ x: touch.clientX, y: touch.clientY });
   }, []);
 
-  const handleTouchEnd = useCallback((e) => {
-    if (!touchStart.x || !touchStart.y) return;
-    
-    const touch = e.changedTouches[0];
-    const deltaX = touchStart.x - touch.clientX;
-    const deltaY = touchStart.y - touch.clientY;
-    
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 80) {
-      if (deltaX > 0) {
-        navigateImage('next');
-      } else {
-        navigateImage('prev');
-      }
+const handleTouchEnd = useCallback((e) => {
+  if (!touchStart.x || !touchStart.y) return;
+  
+  const touch = e.changedTouches[0];
+  const deltaX = touchStart.x - touch.clientX;
+  
+  if (Math.abs(deltaX) > 50) { // Ngưỡng thấp hơn
+    if (deltaX > 0) {
+      navigateImage('next');
+    } else {
+      navigateImage('prev');
     }
-    
-    setTouchStart({ x: 0, y: 0 });
-  }, [touchStart, navigateImage]);
+  }
+  
+  setTouchStart({ x: 0, y: 0 });
+}, [touchStart, navigateImage]);
 
   const handlePan = useCallback((event, info) => {
-    if (Math.abs(info.offset.x) > 120) {
-      if (info.offset.x > 0) {
-        navigateImage('prev');
-      } else {
-        navigateImage('next');
-      }
+  if (Math.abs(info.offset.x) > 50) { // Ngưỡng thấp hơn
+    if (info.offset.x > 0) {
+      navigateImage('prev');
+    } else {
+      navigateImage('next');
     }
-  }, [navigateImage]);
+  }
+}, [navigateImage]);
 
   const ImageComponent = useMemo(() => {
-    return React.memo(({ src, alt, className, style, onClick, ...props }) => (
-      <img
-        src={`/images/${src}`}
-        alt={alt}
-        className={className}
-        style={{
-          transform: 'translate3d(0,0,0)',
-          willChange: 'transform, opacity',
-          imageRendering: 'crisp-edges',
-          WebkitImageSmoothing: 'high',
-          imageSmoothing: 'high',
-          filter: 'none',
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-          ...style
-        }}
-        loading="eager"
-        decoding="async"
-        fetchPriority="high"
-        onClick={onClick}
-        {...props}
-      />
-    ));
-  }, []);
+  return React.memo(({ src, alt, className, style, onClick, ...props }) => (
+    <img
+      src={`/images/${src}`}
+      alt={alt}
+      className={className}
+      style={{
+        ...style,
+        willChange: 'transform', // Chỉ cần transform thôi
+        transform: 'translateZ(0)', // Kích hoạt GPU acceleration
+        backfaceVisibility: 'hidden'
+      }}
+      loading="lazy" // Thay eager bằng lazy để tải ảnh nền
+      decoding="async"
+      onClick={onClick}
+      {...props}
+    />
+  ));
+}, []);
 
   // Enhanced animation variants with direction-aware transitions
-  const imageVariants = {
-    enter: (direction) => ({
-      x: direction > 0 ? 100 : -100,
-      opacity: 0,
-      scale: 0.95,
-      filter: 'blur(4px)',
-      transition: {
-        duration: 0,
-      }
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      filter: 'blur(0px)',
-      transition: {
-        duration: 0.5,
-        ease: [0.25, 0.46, 0.45, 0.94],
-        staggerChildren: 0.1
-      }
-    },
-    exit: (direction) => ({
-      x: direction < 0 ? 100 : -100,
-      opacity: 0,
-      scale: 0.95,
-      filter: 'blur(4px)',
-      transition: {
-        duration: 0.3,
-        ease: [0.25, 0.46, 0.45, 0.94]
-      }
-    })
-  };
+ // Thay thế imageVariants hiện tại bằng cái này
+const imageVariants = {
+  enter: (direction) => ({
+    x: direction > 0 ? 1000 : -1000, // Tăng khoảng cách ban đầu
+    opacity: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.33, 1, 0.68, 1] // Easing mượt hơn
+    }
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.33, 1, 0.68, 1]
+    }
+  },
+  exit: (direction) => ({
+    x: direction < 0 ? 1000 : -1000,
+    opacity: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.33, 1, 0.68, 1]
+    }
+  })
+};
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -272,21 +260,23 @@ const Gallery = () => {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <div className="absolute inset-0 rounded-3xl overflow-hidden">
-              <AnimatePresence mode="wait" custom={dragDirection} initial={false}>
-                <motion.div
-                  key={currentImageIndex}
-                  custom={dragDirection}
-                  variants={imageVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="absolute inset-0"
-                  drag={isMobile ? "x" : false}
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.2}
-                  onDragEnd={handlePan}
-                  whileDrag={{ scale: 0.95, rotateY: 5 }}
-                >
+            <AnimatePresence mode="popLayout" custom={dragDirection} initial={false}>
+  <motion.div
+    key={currentImageIndex}
+    custom={dragDirection}
+    variants={imageVariants}
+    initial="enter"
+    animate="center"
+    exit="exit"
+    className="absolute inset-0"
+    drag={isMobile ? "x" : false}
+    dragConstraints={{ left: 0, right: 0 }}
+    dragElastic={0.1} // Giảm độ đàn hồi
+    onDragEnd={handlePan}
+    style={{
+      willChange: 'transform' // Tối ưu cho animation
+    }}
+  >
                   <ImageComponent
                     src={weddingImages[currentImageIndex]}
                     alt={`Ảnh cưới ${currentImageIndex + 1}`}
@@ -343,15 +333,14 @@ const Gallery = () => {
             )}
 
             {/* Mobile Swipe Indicator with Animation */}
-            {isMobile && (
-              <motion.div
-                className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex items-center space-x-3 text-white/70 text-sm bg-black/20 backdrop-blur-md px-4 py-2 rounded-full"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, duration: 0.5 }}
-              >
+          {isMobile && (
+  <motion.div
+className="absolute bottom-16 left-0 right-0 flex items-center justify-center space-x-2 text-white/70 text-xs bg-black/20 backdrop-blur-md px-3 py-1 rounded-full mx-auto w-max"    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 1, duration: 0.5 }}
+  >
                 <motion.svg
-                  className="w-5 h-5"
+                  className="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -362,7 +351,7 @@ const Gallery = () => {
                 </motion.svg>
                 <span className="font-medium">Vuốt để chuyển ảnh</span>
                 <motion.svg
-                  className="w-5 h-5"
+                  className="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -375,37 +364,36 @@ const Gallery = () => {
             )}
 
             {/* Enhanced Counter & Controls */}
-            <motion.div
-              className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center space-x-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <div className="bg-black/30 backdrop-blur-xl text-white px-6 py-3 rounded-2xl text-sm font-semibold border border-white/10 shadow-lg">
+         <motion.div
+  className="absolute bottom-4 left-0 right-0 flex items-center justify-center space-x-3"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.5 }}
+>
+<div className="bg-black/30 backdrop-blur-xl text-white px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 shadow-lg">
                 <span className="text-rose-300">{currentImageIndex + 1}</span>
                 <span className="mx-2 text-white/60">/</span>
                 <span className="text-white/80">{weddingImages.length}</span>
               </div>
               <motion.button
                 onClick={() => setFullscreenOpen(true)}
-                className="bg-white/15 backdrop-blur-xl hover:bg-white/25 p-3 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10"
-                whileHover={{ scale: 1.1 }}
+    className="bg-white/15 backdrop-blur-xl hover:bg-white/25 p-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10"                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                 </svg>
               </motion.button>
               {/* Auto-play toggle */}
               <motion.button
                 onClick={() => setIsUserInteracting(!isUserInteracting)}
-                className={`backdrop-blur-xl p-3 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10 ${
-                  isUserInteracting ? 'bg-white/15 hover:bg-white/25' : 'bg-rose-500/80 hover:bg-rose-500'
-                }`}
+                 className={`backdrop-blur-xl p-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10 ${
+      isUserInteracting ? 'bg-white/15 hover:bg-white/25' : 'bg-rose-500/80 hover:bg-rose-500'
+    }`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {isUserInteracting ? (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-9 4h10a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   ) : (
@@ -567,16 +555,18 @@ const Gallery = () => {
                     </>
                   )}
                   
-                  <motion.div
-                    className="absolute bottom-6 left-1/2 transform -translate-x-1/2 bg-black/40 backdrop-blur-xl text-white px-8 py-4 rounded-2xl font-semibold text-lg border border-white/20"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <span className="text-rose-300">{currentImageIndex + 1}</span>
-                    <span className="mx-3 text-white/60">/</span>
-                    <span className="text-white/90">{weddingImages.length}</span>
-                  </motion.div>
+                 <motion.div
+  className="absolute bottom-4 left-0 right-0 flex justify-center"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.2 }}
+>
+  <div className="bg-black/40 backdrop-blur-xl text-white px-4 py-2 rounded-xl text-sm font-medium border border-white/20">
+    <span className="text-rose-300">{currentImageIndex + 1}</span>
+    <span className="mx-2 text-white/60">/</span>
+    <span className="text-white/90">{weddingImages.length}</span>
+  </div>
+</motion.div>
                 </div>
               </motion.div>
             )}

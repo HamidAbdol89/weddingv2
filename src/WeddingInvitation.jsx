@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, Heart, MapPin, Clock } from 'lucide-react';
 import WeddingPhotosScroll from './WeddingPhotosScroll';
 import WeddingCountdown from './WeddingCountdown';
+import WeddingWishesComponent from './WeddingWishesComponent';
 
 const WeddingInvitation = () => {
  const [currentSection, setCurrentSection] = useState('invitation');
@@ -502,7 +503,9 @@ const WeddingInvitation = () => {
          </div>
        )}
      </div>
-
+     <WeddingPhotosScroll />
+         <WeddingCountdown/>
+         <WeddingWishesComponent/>
      {/* Enhanced CSS for animations and performance */}
      <style>{`
        @media (max-width: 1024px) {
@@ -585,9 +588,10 @@ const WeddingInvitation = () => {
          transform: translateZ(0);
        }
      `}</style>
-         <WeddingPhotosScroll />
-<WeddingCountdown/>
+    
+
    </div>
+   
  );
 };
 

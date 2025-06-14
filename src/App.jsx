@@ -24,6 +24,7 @@ export default function App() {
     isLoading: false
   });
 
+  
   // Hàm mở modal
   const openModal = (content) => {
     setModalContent(content);
@@ -65,6 +66,12 @@ export default function App() {
       console.error("Audio error:", error);
     }
   };
+
+  
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, [currentSection]);
+
 
   // Xử lý scroll để show/hide navbar - chỉ áp dụng với phần invitation
   useEffect(() => {
