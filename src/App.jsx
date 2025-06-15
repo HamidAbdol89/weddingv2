@@ -1,8 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Text, Box } from '@react-three/drei';
-import { Heart, Calendar, MapPin, Users, Music, Mail, Phone, MessageCircle } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Music } from 'lucide-react';
 import WeddingDetails from './WeddingDetails';
 import MailForm from './MailForm';
 import Gallery from './Gallery';

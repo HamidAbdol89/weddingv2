@@ -24,7 +24,7 @@ const WeddingInvitation = () => {
  
  const mobileImages = [
    '/images/mobile.jpg',
-     '/images/16.JPG',
+     '/images/8.jpg',
    '/images/9.jpg', 
  
    '/images/background2.JPG'
@@ -152,6 +152,7 @@ const WeddingInvitation = () => {
  const fadeInUp = "transition-all duration-600 ease-out";
  const slideInRight = "transition-all duration-700 ease-out";
  const bounceIn = "transition-all duration-500 ease-out";
+ 
 
  // Loading screen while images preload
  if (!imagesLoaded) {
@@ -330,26 +331,33 @@ const WeddingInvitation = () => {
                      Trân trọng kính mời bạn tham dự
                    </p>
                    <p className="text-3xl xl:text-4xl text-white font-medium mt-3 drop-shadow-lg">
-                     Lễ Cưới của chúng tôi
+                      Hồn Lê Được Cử Hành
                    </p>
                  </div>
 
                  {/* Wedding Details - Staggered */}
-                 <div className="space-y-4 text-white">
-                   {/* Date */}
-                   <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
-                     textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
-                   }`} style={{ transitionDelay: '0.05s' }}>
-                     <div className="text-right">
-                       <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg">
-                         Chủ Nhật, 13 Tháng 7
-                       </p>
-                       <p className="text-lg text-white/80 drop-shadow-lg">
-                         Ngày 19 tháng 6 năm Ất Tỵ
-                       </p>
-                     </div>
-                     <Calendar className="w-8 h-8 text-white drop-shadow-lg" />
-                   </div>
+                  <div className="space-y-4 text-white">
+                    {/* Date */}
+                    <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
+                      textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
+                    }`} style={{ transitionDelay: '0.05s' }}>
+                      <div className="text-right">
+                        <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg">
+                          12 Tháng 7 (Tối Thứ 7)
+                        </p>
+                        <p className="text-lg text-white/80 drop-shadow-lg">
+                          Thời gian: 19:00PM
+                        </p>
+                        <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg mt-2">
+                          13 Tháng 7 (Sáng Chủ Nhật)
+                        </p>
+                        <p className="text-lg text-white/80 drop-shadow-lg">
+                          Thời gian: 8:00AM
+                        </p>
+                      </div>
+                      <Calendar className="w-8 h-8 text-white drop-shadow-lg" />
+                    </div>
+
 
                    {/* Time */}
                    <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
@@ -366,21 +374,21 @@ const WeddingInvitation = () => {
                      <Clock className="w-8 h-8 text-white drop-shadow-lg" />
                    </div>
 
-                   {/* Location */}
-                   <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
-                     textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
-                   }`} style={{ transitionDelay: '0.25s' }}>
-                     <div className="text-right">
-                       <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg">
-                         Số nhà 232, Tổ 3 
-                       </p>
-                       <p className="text-lg text-white/80 drop-shadow-lg">
-                         Ấp Châu Giang, Xã Châu Phong, TX Tân Châu, Tỉnh An Giang
-                       </p>
-                     </div>
-                     <MapPin className="w-8 h-8 text-white drop-shadow-lg" />
-                   </div>
-                 </div>
+                    {/* Location */}
+                    <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
+                      textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
+                    }`} style={{ transitionDelay: '0.25s' }}>
+                      <div className="text-right">
+                        <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg">
+                          Số nhà 232, Tổ 3 
+                        </p>
+                        <p className="text-lg text-white/80 drop-shadow-lg">
+                          Ấp Châu Giang, Xã Châu Phong, TX Tân Châu, Tỉnh An Giang
+                        </p>
+                      </div>
+                      <MapPin className="w-8 h-8 text-white drop-shadow-lg" />
+                    </div>
+                  </div>
 
                  {/* Quote */}
                  <div className={`mt-12 pt-8 border-t border-white/30 ${fadeInUp} ${
@@ -430,33 +438,39 @@ const WeddingInvitation = () => {
                  </div>
 
                  {/* Invitation Text - Compact for Mobile */}
-                 <div className={`mb-6 sm:mb-8 ${fadeInUp} ${
-                   textPhase >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                 }`} style={{ transitionDelay: '0.1s' }}>
-                   <p className="text-base sm:text-lg text-white leading-relaxed font-light drop-shadow-lg">
-                     Trân trọng kính mời bạn tham dự
-                   </p>
-                   <p className="text-lg sm:text-xl text-white font-medium mt-2 drop-shadow-lg">
-                     Lễ Cưới của chúng tôi
-                   </p>
-                 </div>
+               <div className={`mb-6 sm:mb-8 ${fadeInUp} ${
+                  textPhase >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                }`} style={{ transitionDelay: '0.1s' }}>
+                  <p className="text-base sm:text-lg text-white leading-relaxed font-light drop-shadow-lg">
+                    Trân trọng kính mời bạn tham dự
+                  </p>
+                  <p className="text-lg sm:text-xl text-white font-medium mt-2 drop-shadow-lg">
+                    Hồn Lê Được Cử Hành
+                  </p>
+                </div>
 
-                 {/* Wedding Details - Compact Mobile Layout */}
-                 <div className="space-y-3 text-white">
-                   {/* Date */}
-                   <div className={`flex items-center justify-center space-x-3 ${slideInRight} ${
-                     textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-                   }`} style={{ transitionDelay: '0.05s' }}>
-                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg flex-shrink-0" />
-                     <div className="text-center">
-                       <p className="text-sm sm:text-base font-medium drop-shadow-lg">
-                         Chủ Nhật, 13 Tháng 7
-                       </p>
-                       <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg">
-                         Ngày 19 tháng 6 năm Ất Tỵ
-                       </p>
-                     </div>
-                   </div>
+               {/* Wedding Details - Compact Mobile Layout */}
+              <div className="space-y-3 text-white">
+                {/* Date */}
+                <div className={`flex items-center justify-center space-x-3 ${slideInRight} ${
+                  textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+                }`} style={{ transitionDelay: '0.05s' }}>
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg flex-shrink-0" />
+                  <div className="text-center">
+                    <p className="text-sm sm:text-base font-medium drop-shadow-lg">
+                      12 Tháng 7 (Tối Thứ 7)
+                    </p>
+                    <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg">
+                      Thời gian: 19:00PM
+                    </p>
+                    <p className="text-sm sm:text-base font-medium drop-shadow-lg mt-1">
+                      13 Tháng 7 (Sáng Chủ Nhật)
+                    </p>
+                    <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg">
+                      Thời gian: 8:00AM
+                    </p>
+                  </div>
+                </div>
 
                    {/* Time */}
                    <div className={`flex items-center justify-center space-x-3 ${slideInRight} ${
@@ -473,21 +487,21 @@ const WeddingInvitation = () => {
                      </div>
                    </div>
 
-                   {/* Location */}
-                   <div className={`flex items-start justify-center space-x-3 ${slideInRight} ${
-                     textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-                   }`} style={{ transitionDelay: '0.25s' }}>
-                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg flex-shrink-0 mt-1" />
-                     <div className="text-center">
-                       <p className="text-sm sm:text-base font-medium drop-shadow-lg">
-                         Số nhà 232, Tổ 3 
-                       </p>
-                       <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg leading-tight">
-                         Ấp Châu Giang, Xã Châu Phong<br />TX Tân Châu, Tỉnh An Giang
-                       </p>
-                     </div>
-                   </div>
-                 </div>
+                  {/* Location */}
+  <div className={`flex items-start justify-center space-x-3 ${slideInRight} ${
+    textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
+  }`} style={{ transitionDelay: '0.25s' }}>
+    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg flex-shrink-0 mt-1" />
+    <div className="text-center">
+      <p className="text-sm sm:text-base font-medium drop-shadow-lg">
+        Số nhà 232, Tổ 3 
+      </p>
+      <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg leading-tight">
+        Ấp Châu Giang, Xã Châu Phong<br />TX Tân Châu, Tỉnh An Giang
+      </p>
+    </div>
+  </div>
+</div>
 
                  {/* Quote - Mobile Compact */}
                  <div className={`mt-6 pt-4 border-t border-white/30 ${fadeInUp} ${

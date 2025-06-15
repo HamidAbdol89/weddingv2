@@ -1,0 +1,42 @@
+# robots.txt for weddinghasikin.pages.dev
+# Thiệp cưới DUSÔ & HASIKIN
+
+User-agent: *
+Allow: /
+
+# Cho phép tất cả search engines index
+Allow: /images/
+Allow: /assets/
+Allow: /src/
+
+# Không cho phép crawl các file không cần thiết
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /.env
+Disallow: /vite.config.js
+Disallow: /tailwind.config.js
+
+# Sitemap location
+Sitemap: https://weddinghasikin.pages.dev/sitemap.xml
+
+# Crawl delay (tùy chọn)
+Crawl-delay: 1
+
+# Specific search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: facebookexternalhit
+Allow: /
+Crawl-delay: 0
+
+User-agent: Twitterbot
+Allow: /
+Crawl-delay: 0

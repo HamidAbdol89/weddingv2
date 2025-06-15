@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Users, Mail, Phone, MessageCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import ModalOpen from './ModalOPen';
+import BubbleFloating from './BubbleFloating';
 
 const MailForm = () => {
   const [formData, setFormData] = useState({
@@ -110,6 +111,7 @@ const MailForm = () => {
 
   return (
     <>
+    <BubbleFloating bubbleCount={12} className="z-10" />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -4,16 +4,17 @@ import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion'
 const Gallery = () => { 
   const weddingImages = [
     '13.png', '4.jpg', '9.jpg', '10.JPG', '11.JPG', '12.jpg', '8.jpg',
-    '1.jpg', '2.jpg', '3.jpg', '5.JPG', '6.JPG', '7.JPG',
+    '1.jpg', '2.jpg', '3.jpg', '5.JPG', '6.JPG', '7.JPG', '18.JPG', '19.JPG', '20.JPG', '21.JPG','background3.JPG'
+    , '22.JPG' , '23.JPG' , '24.JPG' , '25.JPG' , '26.JPG', '27.JPG', '28.JPG'
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
-  const [imagesLoaded, setImagesLoaded] = useState(new Set());
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [dragDirection, setDragDirection] = useState(0);
   const imageRefs = useRef(new Map());
   const preloadedImages = useRef(new Map());
@@ -33,44 +34,82 @@ const Gallery = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Preload images with loading states
+  // Preload ALL images before showing gallery
   useEffect(() => {
-    const preloadImage = (src) => {
-      if (!preloadedImages.current.has(src)) {
-        const img = new Image();
-        img.src = `/images/${src}`;
-        img.loading = 'eager';
-        img.decoding = 'async';
+    let isMounted = true;
+    let loadedCount = 0;
+
+    const preloadAllImages = async () => {
+      const promises = weddingImages.map((imageSrc, index) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = `/images/${imageSrc}`;
+          img.loading = 'eager';
+          img.decoding = 'sync'; // Đồng bộ để đảm bảo decode hoàn tất
+          
+          img.onload = () => {
+            if (isMounted) {
+              loadedCount++;
+              preloadedImages.current.set(imageSrc, img);
+              
+              // Cập nhật progress
+              const progress = Math.round((loadedCount / weddingImages.length) * 100);
+              setLoadingProgress(progress);
+              
+              console.log(`Loaded ${loadedCount}/${weddingImages.length}: ${imageSrc}`);
+            }
+            resolve(img);
+          };
+          
+          img.onerror = (error) => {
+            console.error(`Failed to load image: ${imageSrc}`, error);
+            if (isMounted) {
+              loadedCount++;
+              const progress = Math.round((loadedCount / weddingImages.length) * 100);
+              setLoadingProgress(progress);
+            }
+            // Vẫn resolve để không block toàn bộ quá trình
+            resolve(null);
+          };
+        });
+      });
+
+      try {
+        await Promise.all(promises);
         
-        img.onload = () => {
-          setImagesLoaded(prev => new Set([...prev, src]));
-          preloadedImages.current.set(src, img);
-          if (imagesLoaded.size === 0) setIsLoading(false);
-        };
+        if (isMounted) {
+          console.log('All images preloaded successfully!');
+          // Delay nhỏ để người dùng thấy 100%
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 500);
+        }
+      } catch (error) {
+        console.error('Error preloading images:', error);
+        if (isMounted) {
+          setIsLoading(false); // Vẫn cho phép vào gallery nếu có lỗi
+        }
       }
     };
 
-    // Preload current and adjacent images
-    const indicesToPreload = [
-      currentImageIndex,
-      (currentImageIndex + 1) % weddingImages.length,
-      currentImageIndex === 0 ? weddingImages.length - 1 : currentImageIndex - 1
-    ];
+    preloadAllImages();
 
-    indicesToPreload.forEach(index => {
-      preloadImage(weddingImages[index]);
-    });
-  }, [currentImageIndex, weddingImages, imagesLoaded.size]);
+    return () => {
+      isMounted = false;
+    };
+  }, [weddingImages]);
 
+  // Auto slideshow - chỉ chạy khi đã load xong và không có interaction
   useEffect(() => {
-    if (!isUserInteracting && !fullscreenOpen) {
+    if (!isUserInteracting && !fullscreenOpen && !isLoading) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prev) => (prev + 1) % weddingImages.length);
       }, 6000);
       return () => clearInterval(interval);
     }
-  }, [isUserInteracting, fullscreenOpen, weddingImages.length]);
+  }, [isUserInteracting, fullscreenOpen, isLoading, weddingImages.length]);
 
+  // Reset user interaction after delay
   useEffect(() => {
     if (isUserInteracting) {
       const timer = setTimeout(() => setIsUserInteracting(false), 10000);
@@ -94,81 +133,85 @@ const Gallery = () => {
     setTouchStart({ x: touch.clientX, y: touch.clientY });
   }, []);
 
-const handleTouchEnd = useCallback((e) => {
-  if (!touchStart.x || !touchStart.y) return;
-  
-  const touch = e.changedTouches[0];
-  const deltaX = touchStart.x - touch.clientX;
-  
-  if (Math.abs(deltaX) > 50) { // Ngưỡng thấp hơn
-    if (deltaX > 0) {
-      navigateImage('next');
-    } else {
-      navigateImage('prev');
+  const handleTouchEnd = useCallback((e) => {
+    if (!touchStart.x || !touchStart.y) return;
+    
+    const touch = e.changedTouches[0];
+    const deltaX = touchStart.x - touch.clientX;
+    
+    if (Math.abs(deltaX) > 50) {
+      if (deltaX > 0) {
+        navigateImage('next');
+      } else {
+        navigateImage('prev');
+      }
     }
-  }
-  
-  setTouchStart({ x: 0, y: 0 });
-}, [touchStart, navigateImage]);
+    
+    setTouchStart({ x: 0, y: 0 });
+  }, [touchStart, navigateImage]);
 
   const handlePan = useCallback((event, info) => {
-  if (Math.abs(info.offset.x) > 50) { // Ngưỡng thấp hơn
-    if (info.offset.x > 0) {
-      navigateImage('prev');
-    } else {
-      navigateImage('next');
+    if (Math.abs(info.offset.x) > 50) {
+      if (info.offset.x > 0) {
+        navigateImage('prev');
+      } else {
+        navigateImage('next');
+      }
     }
-  }
-}, [navigateImage]);
+  }, [navigateImage]);
 
+  // Optimized Image Component - sử dụng ảnh đã preload
   const ImageComponent = useMemo(() => {
-  return React.memo(({ src, alt, className, style, onClick, ...props }) => (
-    <img
-      src={`/images/${src}`}
-      alt={alt}
-      className={className}
-      style={{
-        ...style,
-        willChange: 'transform', // Chỉ cần transform thôi
-        transform: 'translateZ(0)', // Kích hoạt GPU acceleration
-        backfaceVisibility: 'hidden'
-      }}
-      loading="lazy" // Thay eager bằng lazy để tải ảnh nền
-      decoding="async"
-      onClick={onClick}
-      {...props}
-    />
-  ));
-}, []);
+    return React.memo(({ src, alt, className, style, onClick, ...props }) => {
+      const preloadedImg = preloadedImages.current.get(src);
+      
+      return (
+        <img
+          src={preloadedImg ? preloadedImg.src : `/images/${src}`}
+          alt={alt}
+          className={className}
+          style={{
+            ...style,
+            willChange: 'transform',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }}
+          loading="eager" // Đã preload rồi nên dùng eager
+          decoding="sync"
+          onClick={onClick}
+          {...props}
+        />
+      );
+    });
+  }, []);
 
   // Enhanced animation variants with direction-aware transitions
- // Thay thế imageVariants hiện tại bằng cái này
-const imageVariants = {
-  enter: (direction) => ({
-    x: direction > 0 ? 1000 : -1000, // Tăng khoảng cách ban đầu
-    opacity: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.33, 1, 0.68, 1] // Easing mượt hơn
-    }
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.33, 1, 0.68, 1]
-    }
-  },
-  exit: (direction) => ({
-    x: direction < 0 ? 1000 : -1000,
-    opacity: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.33, 1, 0.68, 1]
-    }
-  })
-};
+  const imageVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.33, 1, 0.68, 1]
+      }
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.33, 1, 0.68, 1]
+      }
+    },
+    exit: (direction) => ({
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.33, 1, 0.68, 1]
+      }
+    })
+  };
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -195,6 +238,95 @@ const imageVariants = {
       }
     }
   };
+
+  // Enhanced Loading Screen
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rose-50/50 via-white to-pink-50/50 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center space-y-8 max-w-md mx-auto px-6"
+        >
+          {/* Logo hoặc Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h1 className="text-4xl sm:text-5xl font-serif bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 bg-clip-text text-transparent mb-4">
+              Album Ảnh Cưới
+            </h1>
+            <div className="w-16 h-1 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full" />
+          </motion.div>
+
+          {/* Enhanced Loading Animation */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-6"
+          >
+            {/* Spinning Ring */}
+            <div className="relative w-20 h-20 mx-auto">
+              <motion.div
+                className="absolute inset-0 border-4 border-rose-200 rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+              <motion.div
+                className="absolute inset-0 border-4 border-transparent border-t-rose-500 rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              />
+              <motion.div
+                className="absolute inset-2 border-2 border-transparent border-t-pink-400 rounded-full"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              />
+            </div>
+
+            {/* Progress Bar */}
+            <div className="space-y-3">
+              <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-rose-500 via-pink-500 to-rose-400 rounded-full shadow-sm"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${loadingProgress}%` }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+              </div>
+              
+              {/* Progress Text */}
+              <div className="text-gray-600 text-sm space-y-1">
+                <div className="font-semibold text-rose-600">
+                  {loadingProgress}% hoàn thành
+                </div>
+                <div className="text-xs">
+                  Đang tải {Math.ceil((loadingProgress / 100) * weddingImages.length)}/{weddingImages.length} ảnh
+                </div>
+              </div>
+            </div>
+
+            {/* Loading Messages */}
+            <motion.div
+              key={Math.floor(loadingProgress / 25)} // Thay đổi message theo progress
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-gray-500 text-sm font-medium"
+            >
+              {loadingProgress < 25 && "Đang chuẩn bị những khoảnh khắc đẹp nhất..."}
+              {loadingProgress >= 25 && loadingProgress < 50 && "Đang tải những hình ảnh tuyệt vời..."}
+              {loadingProgress >= 50 && loadingProgress < 75 && "Sắp hoàn tất, vui lòng đợi thêm chút..."}
+              {loadingProgress >= 75 && loadingProgress < 100 && "Hoàn thiện những chi tiết cuối cùng..."}
+              {loadingProgress === 100 && "Hoàn tất! Đang chuẩn bị hiển thị..."}
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <motion.div 
@@ -236,21 +368,6 @@ const imageVariants = {
         
         {/* Main Gallery Container */}
         <motion.div className="relative" variants={itemVariants}>
-          {/* Loading State */}
-          {isLoading && (
-            <motion.div
-              className="absolute inset-0 z-10 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-3xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <div className="flex flex-col items-center space-y-4">
-                <div className="w-12 h-12 border-4 border-rose-200 border-t-rose-500 rounded-full animate-spin"></div>
-                <p className="text-gray-600 font-medium">Đang tải ảnh...</p>
-              </div>
-            </motion.div>
-          )}
-
           {/* Main Image Display */}
           <motion.div 
             className="relative w-full h-[55vh] sm:h-[80vh] bg-gradient-to-br from-gray-100 to-gray-50 rounded-3xl overflow-hidden shadow-2xl border border-white/50"
@@ -260,23 +377,23 @@ const imageVariants = {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
             <div className="absolute inset-0 rounded-3xl overflow-hidden">
-            <AnimatePresence mode="popLayout" custom={dragDirection} initial={false}>
-  <motion.div
-    key={currentImageIndex}
-    custom={dragDirection}
-    variants={imageVariants}
-    initial="enter"
-    animate="center"
-    exit="exit"
-    className="absolute inset-0"
-    drag={isMobile ? "x" : false}
-    dragConstraints={{ left: 0, right: 0 }}
-    dragElastic={0.1} // Giảm độ đàn hồi
-    onDragEnd={handlePan}
-    style={{
-      willChange: 'transform' // Tối ưu cho animation
-    }}
-  >
+              <AnimatePresence mode="popLayout" custom={dragDirection} initial={false}>
+                <motion.div
+                  key={currentImageIndex}
+                  custom={dragDirection}
+                  variants={imageVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="absolute inset-0"
+                  drag={isMobile ? "x" : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.1}
+                  onDragEnd={handlePan}
+                  style={{
+                    willChange: 'transform'
+                  }}
+                >
                   <ImageComponent
                     src={weddingImages[currentImageIndex]}
                     alt={`Ảnh cưới ${currentImageIndex + 1}`}
@@ -333,12 +450,13 @@ const imageVariants = {
             )}
 
             {/* Mobile Swipe Indicator with Animation */}
-          {isMobile && (
-  <motion.div
-className="absolute bottom-16 left-0 right-0 flex items-center justify-center space-x-2 text-white/70 text-xs bg-black/20 backdrop-blur-md px-3 py-1 rounded-full mx-auto w-max"    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 1, duration: 0.5 }}
-  >
+            {isMobile && (
+              <motion.div
+                className="absolute bottom-16 left-0 right-0 flex items-center justify-center space-x-2 text-white/70 text-xs bg-black/20 backdrop-blur-md px-3 py-1 rounded-full mx-auto w-max"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.5 }}
+              >
                 <motion.svg
                   className="w-4 h-4"
                   fill="none"
@@ -364,20 +482,21 @@ className="absolute bottom-16 left-0 right-0 flex items-center justify-center sp
             )}
 
             {/* Enhanced Counter & Controls */}
-         <motion.div
-  className="absolute bottom-4 left-0 right-0 flex items-center justify-center space-x-3"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.5 }}
->
-<div className="bg-black/30 backdrop-blur-xl text-white px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 shadow-lg">
+            <motion.div
+              className="absolute bottom-4 left-0 right-0 flex items-center justify-center space-x-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <div className="bg-black/30 backdrop-blur-xl text-white px-4 py-2 rounded-xl text-xs font-semibold border border-white/10 shadow-lg">
                 <span className="text-rose-300">{currentImageIndex + 1}</span>
                 <span className="mx-2 text-white/60">/</span>
                 <span className="text-white/80">{weddingImages.length}</span>
               </div>
               <motion.button
                 onClick={() => setFullscreenOpen(true)}
-    className="bg-white/15 backdrop-blur-xl hover:bg-white/25 p-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10"                whileHover={{ scale: 1.1 }}
+                className="bg-white/15 backdrop-blur-xl hover:bg-white/25 p-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10"
+                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -387,9 +506,9 @@ className="absolute bottom-16 left-0 right-0 flex items-center justify-center sp
               {/* Auto-play toggle */}
               <motion.button
                 onClick={() => setIsUserInteracting(!isUserInteracting)}
-                 className={`backdrop-blur-xl p-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10 ${
-      isUserInteracting ? 'bg-white/15 hover:bg-white/25' : 'bg-rose-500/80 hover:bg-rose-500'
-    }`}
+                className={`backdrop-blur-xl p-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg border border-white/10 ${
+                  isUserInteracting ? 'bg-white/15 hover:bg-white/25' : 'bg-rose-500/80 hover:bg-rose-500'
+                }`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >

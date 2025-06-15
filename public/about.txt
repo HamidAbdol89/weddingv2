@@ -1,6 +1,62 @@
-This favicon was generated using the following graphics from Twitter Twemoji:
+💕 THIỆP CƯỚI DUSÔ & HASIKIN 💒
+========================================
 
-- Graphics Title: 2764.svg
-- Graphics Author: Copyright 2020 Twitter, Inc and other contributors (https://github.com/twitter/twemoji)
-- Graphics Source: https://github.com/twitter/twemoji/blob/master/assets/svg/2764.svg
-- Graphics License: CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+🌟 THÔNG TIN WEBSITE
+- Tên: Thiệp cưới DUSÔ & HASIKIN
+- URL: https://weddinghasikin.pages.dev/
+- Ngôn ngữ: Tiếng Việt
+- Phiên bản: 1.0.0
+- Ngày tạo: Tháng 6 năm 2025
+
+👰🤵 THÔNG TIN CẶP ĐÔI
+- Cô dâu: HASIKIN
+- Chú rể: DUSÔ
+- Năm cưới: 2025
+
+🎯 MỤC ĐÍCH
+Website thiệp cưới điện tử được tạo ra để:
+- Gửi lời mời đến bạn bè và người thân
+- Chia sẻ thông tin chi tiết về lễ cưới
+- Tạo kỷ niệm đẹp cho ngày trọng đại
+- Thu thập xác nhận tham dự từ khách mời
+
+🛠️ CÔNG NGHỆ SỬ DỤNG
+- Frontend: React.js + Vite
+- Styling: Tailwind CSS
+- Hosting: Cloudflare Pages
+- Domain: pages.dev
+- Responsive: Mobile-first design
+
+📱 TÍNH NĂNG
+- Thiết kế responsive trên mọi thiết bị
+- Tối ưu chia sẻ trên mạng xã hội
+- Progressive Web App (PWA)
+- SEO friendly
+- Tốc độ tải nhanh
+- Hỗ trợ đa ngôn ngữ
+
+🌐 HỖ TRỢ CHIA SẺ
+Website được tối ưu để chia sẻ trên:
+- Facebook & Messenger
+- WhatsApp
+- Telegram
+- Zalo
+- Instagram
+- Twitter/X
+- LinkedIn
+- Pinterest
+- Viber
+
+📧 LIÊN HỆ
+- Email: contact@weddinghasikin.pages.dev
+- Website: https://weddinghasikin.pages.dev/
+
+💌 LỜI CẢM ƠN
+Cảm ơn bạn đã ghé thăm thiệp cưới của chúng tôi!
+Sự hiện diện của bạn sẽ làm cho ngày cưới của chúng tôi trở nên ý nghĩa hơn.
+
+🎉 Hạnh phúc bắt đầu từ đây!
+
+========================================
+© 2025 DUSÔ & HASIKIN. All rights reserved.
+Được tạo với ❤️ tại Việt Nam

@@ -1,22 +1,75 @@
 {
-  "name": "DUSÔ & HASIKIN Wedding",
-  "short_name": "Wedding",
+  "name": "DUSÔ & HASIKIN",
+  "short_name": "DUSÔ & HASIKIN",
+  "description": "💒 Thiệp cưới online đẹp lung linh cho DUSÔ & HASIKIN. Trân trọng kính mời bạn đến dự lễ cưới! 🌹✨",
   "start_url": "/",
   "scope": "/",
-  "description": "Thiệp cưới online đẹp lung linh cho DUSÔ & HASIKIN",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#ff69b4",
+  "background_color": "#ffffff",
+  "lang": "vi",
+  "dir": "ltr",
+  "categories": ["lifestyle", "social", "wedding"],
+  "prefer_related_applications": false,
   "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "shortcuts": [
+    {
+      "name": "Xem thiệp cưới",
+      "short_name": "Thiệp cưới",
+      "description": "Xem thiệp cưới DUSÔ & HASIKIN",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/main.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Thiệp cưới DUSÔ & HASIKIN"
+    }
+  ],
+  "related_applications": [],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
 }
