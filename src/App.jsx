@@ -70,34 +70,35 @@ useEffect(() => {
 }, [currentSection]);
 
 
-  // Xử lý scroll để show/hide navbar - chỉ áp dụng với phần invitation
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      // Chỉ ẩn navbar khi ở phần invitation
-      if (currentSection === 'invitation') {
-        if (scrollY > 100) {
-          setShowNavbar(true);
-        } else {
-          setShowNavbar(false);
-        }
-      } else {
-        // Các phần khác luôn hiện navbar
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+    
+    // Ẩn/hiện navbar khi ở phần invitation hoặc details
+    if (['invitation', 'details'].includes(currentSection)) {
+      if (scrollY > 100) {
         setShowNavbar(true);
+      } else {
+        setShowNavbar(false);
       }
-    };
-
-    // Cập nhật ngay khi chuyển section
-    if (currentSection === 'invitation') {
-      const scrollY = window.scrollY;
-      setShowNavbar(scrollY > 100);
     } else {
+      // Các phần khác luôn hiện navbar
       setShowNavbar(true);
     }
+  };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [currentSection]);
+  // Cập nhật trạng thái ngay khi chuyển section
+  if (['invitation', 'details'].includes(currentSection)) {
+    const scrollY = window.scrollY;
+    setShowNavbar(scrollY > 100);
+  } else {
+    setShowNavbar(true);
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  return () => window.removeEventListener('scroll', handleScroll);
+}, [currentSection]);
+
 
   // Lắng nghe tương tác đầu tiên
   useEffect(() => {
@@ -145,40 +146,39 @@ useEffect(() => {
 return (
  <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 overflow-hidden">
   {/* Rabbit Ears Navbar - macOS Inspired with Show/Hide Animation */}
-  <nav 
-    className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ease-in-out"
-    style={{
-      opacity: showNavbar ? 1 : 0,
-      transform: `translateX(-50%) translateY(${showNavbar ? '0' : '-20px'})`,
-      pointerEvents: showNavbar ? 'auto' : 'none'
-    }}
-  >
-    <div className="relative">
-      {/* Main Navigation Container */}
-      <div className="bg-white/70 backdrop-blur-2xl rounded-full border border-pink-300">
-        <div className="flex space-x-1.5">
-          {Object.entries(sections).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => setCurrentSection(key)}
-              className={`px-5 py-2.5 text-sm sm:text-base rounded-full transition-all duration-200 whitespace-nowrap font-medium ${
-                currentSection === key
-                  ? 'bg-pink-200 text-rose-700'
-                  : 'bg-white/10 text-rose-900 hover:bg-pink-100 hover:text-rose-800'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
+<nav 
+  className="fixed top-1 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ease-in-out"
+  style={{
+    opacity: showNavbar ? 1 : 0,
+    transform: `translateX(-50%) translateY(${showNavbar ? '0' : '-24px'})`,
+    pointerEvents: showNavbar ? 'auto' : 'none',
+  }}
+>
+  <div className="bg-white/80 backdrop-blur-xl border border-pink-200 shadow-lg rounded-3xl px-3 py-1.5">
+    <div className="flex space-x-1.5">
+      {Object.entries(sections).map(([key, label]) => (
+        <button
+          key={key}
+          onClick={() => setCurrentSection(key)}
+          className={`px-4 py-2 text-sm sm:text-base rounded-full transition-all duration-200 font-medium whitespace-nowrap
+            ${
+              currentSection === key
+                ? 'bg-pink-200 text-rose-700 shadow-inner'
+                : 'bg-white/10 text-rose-900 hover:bg-pink-100 hover:text-rose-800'
+            }`}
+        >
+          {label}
+        </button>
+      ))}
     </div>
-  </nav>
+  </div>
+</nav>
+
 
   {currentSection === 'invitation' && <WeddingInvitation />}
 
   {/* Spacer để tránh nội dung bị đè bởi nav - chỉ khi navbar hiện */}
-  {showNavbar && <div className="h-24" />}
+  {showNavbar && <div className="h-20" />}
   
   {/* Main Content */}
   {currentSection === 'details' && <WeddingDetails />}
