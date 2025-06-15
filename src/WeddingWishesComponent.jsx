@@ -11,6 +11,8 @@ export default function WeddingWishesComponent() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+const [showError, setShowError] = useState(false);
+const [errorMessage, setErrorMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,13 +22,17 @@ export default function WeddingWishesComponent() {
     }));
   };
 
-  const handleSubmit = () => {
-    if (!formData.senderName.trim() || !formData.message.trim()) {
-      alert('Vui lòng điền đầy đủ tên và lời chúc!');
-      return;
-    }
+ const handleSubmit = () => {
+  if (!formData.senderName.trim() || !formData.message.trim()) {
+    setErrorMessage('Vui lòng điền đầy đủ tên và lời chúc!');
+    setShowError(true);
+    setTimeout(() => setShowError(false), 3000);
+    return;
+  }
 
     setIsSubmitting(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+
     
     const newWish = {
       senderName: formData.senderName,
@@ -89,40 +95,35 @@ export default function WeddingWishesComponent() {
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-6">
-        {/* Success Notification */}
-        {showSuccess && (
-          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50 animate-slideDown">
-            <div className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white animate-pulse" />
-              </div>
-              <div>
-                <p className="font-bold text-lg">Gửi thành công! 🎉</p>
-                <p className="text-sm opacity-90">Lời chúc của bạn đã được gửi đến cô dâu chú rể</p>
-              </div>
-            </div>
-          </div>
-        )}
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center items-center gap-4 mb-6">
-            <div className="relative">
-              <Heart className="text-rose-500 w-12 h-12 animate-pulse" />
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-pink-400 rounded-full animate-ping opacity-75"></div>
-            </div>
-            <h1 className="text-6xl font-bold bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-              Lời Chúc Đám Cưới
-            </h1>
-            <div className="relative">
-              <Heart className="text-rose-500 w-12 h-12 animate-pulse" />
-              <div className="absolute -top-1 -left-1 w-4 h-4 bg-pink-400 rounded-full animate-ping opacity-75"></div>
-            </div>
-          </div>
-          <p className="text-gray-600 text-xl font-medium">
-            Gửi những lời chúc tốt đẹp nhất đến cô dâu chú rể
-          </p>
-          <div className="mt-4 w-24 h-1 bg-gradient-to-r from-rose-400 to-pink-400 mx-auto rounded-full"></div>
-        </div>
+
+
+
+       {/* Header cải tiến */}
+<div className="text-center mb-16">
+  <div className="flex flex-col items-center">
+    <div className="flex items-center justify-center mb-4">
+      <div className="w-8 h-px bg-gradient-to-r from-transparent to-rose-400 mr-4"></div>
+      <Heart className="text-rose-500 w-6 h-6" />
+      <div className="w-8 h-px bg-gradient-to-l from-transparent to-rose-400 ml-4"></div>
+    </div>
+    
+    <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-rose-600 to-pink-500 bg-clip-text text-transparent mb-4 font-serif tracking-tight">
+      Lời Chúc Đám Cưới
+    </h1>
+    
+    <div className="flex items-center justify-center mb-6">
+      <div className="w-16 h-px bg-gradient-to-r from-transparent to-pink-300 mr-4"></div>
+      <Heart className="text-pink-400 w-5 h-5" />
+      <div className="w-16 h-px bg-gradient-to-l from-transparent to-pink-300 ml-4"></div>
+    </div>
+    
+    <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
+      Gửi những lời chúc tốt đẹp nhất đến cô dâu chú rể trong ngày trọng đại
+    </p>
+    
+    <div className="mt-8 w-32 h-0.5 bg-gradient-to-r from-rose-100 via-rose-400 to-rose-100 mx-auto rounded-full"></div>
+  </div>
+</div>
 
         <div className="grid xl:grid-cols-2 gap-8">
           {/* Form gửi lời chúc */}
@@ -216,8 +217,70 @@ export default function WeddingWishesComponent() {
                     </>
                   )}
                 </button>
+       
               </div>
+                 {showSuccess && (
+  <div className="fixed inset-x-0 top-0 z-50 animate-fadeIn px-4 pt-4 sm:pt-8">
+    <div className="bg-white backdrop-blur-lg bg-opacity-95 border border-emerald-100 text-gray-800 p-4 sm:p-5 rounded-xl shadow-lg flex items-start gap-3 max-w-md mx-auto">
+      <div className="flex-shrink-0">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+        </div>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-gray-900 flex flex-wrap items-baseline gap-1 sm:gap-2">
+          <span className="text-sm sm:text-base">Gửi thành công!</span>
+          <span className="text-xs px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">Hoàn tất</span>
+        </p>
+        <p className="text-xs sm:text-sm text-gray-600 mt-1 break-words">
+          Lời chúc của bạn đã được gửi đến cô dâu chú rể. Cảm ơn bạn đã gửi gắm yêu thương!
+        </p>
+      </div>
+      <button 
+        onClick={() => setShowSuccess(false)}
+        className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 p-1"
+        aria-label="Đóng thông báo"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+)}
+                  {showError && (
+  <div className="fixed inset-x-0 top-0 z-50 animate-fadeIn px-4 pt-4 sm:pt-8">
+    <div className="bg-white backdrop-blur-lg bg-opacity-95 border border-rose-100 text-gray-800 p-4 sm:p-5 rounded-xl shadow-lg flex items-start gap-3 max-w-md mx-auto">
+      <div className="flex-shrink-0">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-rose-100 rounded-full flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-rose-600" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+        </div>
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-gray-900 flex flex-wrap items-baseline gap-1 sm:gap-2">
+          <span className="text-sm sm:text-base">Cần bổ sung thông tin</span>
+          <span className="text-xs px-2 py-0.5 bg-rose-100 text-rose-800 rounded-full">Thiếu dữ liệu</span>
+        </p>
+        <p className="text-xs sm:text-sm text-gray-600 mt-1 break-words">{errorMessage}</p>
+      </div>
+      <button 
+        onClick={() => setShowError(false)}
+        className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 p-1"
+        aria-label="Đóng thông báo"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+)}
             </div>
+            
           </div>
 
           {/* Danh sách lời chúc */}
