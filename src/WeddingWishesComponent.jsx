@@ -81,6 +81,27 @@ const [errorMessage, setErrorMessage] = useState('');
     { value: 'neighbor', label: 'Hàng xóm' },
     { value: 'other', label: 'Khác' }
   ];
+  // Thêm vào file
+useEffect(() => {
+  const handleScroll = () => {
+    const elements = document.querySelectorAll('.group');
+    elements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.8) {
+        el.classList.add('animate-fadeInUp');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', handleScroll);
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+// Thêm vào useEffect khi mount
+useEffect(() => {
+  setTimeout(() => {
+    document.querySelector('.group')?.classList.add('animate-fadeInUp');
+  }, 100);
+}, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
@@ -98,7 +119,10 @@ const [errorMessage, setErrorMessage] = useState('');
 
 
 
-       {/* Header cải tiến */}
+
+
+        <div className="flex flex-col gap-8"> 
+                 {/* Header cải tiến */}
 <div className="text-center mb-16">
   <div className="flex flex-col items-center">
     <div className="flex items-center justify-center mb-4">
@@ -124,8 +148,6 @@ const [errorMessage, setErrorMessage] = useState('');
     <div className="mt-8 w-32 h-0.5 bg-gradient-to-r from-rose-100 via-rose-400 to-rose-100 mx-auto rounded-full"></div>
   </div>
 </div>
-
-        <div className="grid xl:grid-cols-2 gap-8">
           {/* Form gửi lời chúc */}
           <div className="group">
             <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border-2 border-white/50 transition-all duration-500">
@@ -283,63 +305,63 @@ const [errorMessage, setErrorMessage] = useState('');
             
           </div>
 
-          {/* Danh sách lời chúc */}
-          <div className="group">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border-2 border-white/50 transition-all duration-500">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-gradient-to-r from-rose-500 to-pink-500 rounded-2xl shadow-lg">
-                  <Heart className="text-white w-6 h-6" />
+         {/* Danh sách lời chúc - Phiên bản tối ưu mobile */}
+<div className="group">
+  <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-2xl p-4 sm:p-6 md:p-8 border border-white/50 sm:border-2 transition-all duration-500">
+    <div className="flex items-center gap-3 mb-6 sm:mb-8">
+      <div className="p-2 sm:p-3 bg-gradient-to-r from-rose-500 to-pink-500 rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg">
+        <Heart className="text-white w-5 h-5 sm:w-6 sm:h-6" />
+      </div>
+      <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+        Lời Chúc ({wishes.length})
+      </h2>
+    </div>
+    
+    <div className="space-y-3 sm:space-y-4 max-h-[400px] sm:max-h-[500px] overflow-y-auto custom-scrollbar">
+      {wishes.length === 0 ? (
+        <div className="text-center py-8 sm:py-12 text-gray-500">
+          <div className="relative inline-block mb-3 sm:mb-4">
+            <Heart className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-gray-300" />
+            <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-pink-200 rounded-full animate-ping opacity-50"></div>
+          </div>
+          <p className="text-base sm:text-lg font-medium">Chưa có lời chúc nào</p>
+          <p className="text-xs sm:text-sm mt-1 sm:mt-2">Hãy là người đầu tiên gửi lời chúc!</p>
+        </div>
+      ) : (
+        wishes.map((wish, index) => (
+          <div 
+            key={wish.id} 
+            className="bg-gradient-to-r from-rose-50 via-pink-50 to-purple-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-l-2 sm:border-l-4 border-rose-400 transition-all duration-300 animate-fadeIn"
+            style={{ animationDelay: `${index < 10 ? index * 0.1 : 0}s` }}
+          >
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3 sm:mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-rose-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold shadow-md sm:shadow-lg">
+                  {wish.senderName.charAt(0).toUpperCase()}
                 </div>
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                  Lời Chúc ({wishes.length})
-                </h2>
+                <div>
+                  <h4 className="font-bold text-gray-800 text-sm sm:text-base md:text-lg">{wish.senderName}</h4>
+                  {wish.relationship && (
+                    <span className="text-xs sm:text-sm text-rose-600 bg-rose-100 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full font-medium">
+                      {relationshipOptions.find(opt => opt.value === wish.relationship)?.label}
+                    </span>
+                  )}
+                </div>
               </div>
-
-              <div className="space-y-4 max-h-[500px] overflow-y-auto custom-scrollbar">
-                {wishes.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
-                    <div className="relative inline-block mb-4">
-                      <Heart className="w-16 h-16 mx-auto text-gray-300" />
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-pink-200 rounded-full animate-ping opacity-50"></div>
-                    </div>
-                    <p className="text-lg font-medium">Chưa có lời chúc nào</p>
-                    <p className="text-sm mt-2">Hãy là người đầu tiên gửi lời chúc!</p>
-                  </div>
-                ) : (
-                  wishes.map((wish, index) => (
-                    <div 
-                      key={wish.id} 
-                      className="bg-gradient-to-r from-rose-50 via-pink-50 to-purple-50 rounded-2xl p-6 border-l-4 border-rose-400 transition-all duration-300 animate-fadeIn"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-rose-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                            {wish.senderName.charAt(0).toUpperCase()}
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-gray-800 text-lg">{wish.senderName}</h4>
-                            {wish.relationship && (
-                              <span className="text-sm text-rose-600 bg-rose-100 px-3 py-1 rounded-full font-medium">
-                                {relationshipOptions.find(opt => opt.value === wish.relationship)?.label}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500 bg-white/50 px-3 py-1 rounded-full">
-                          <Calendar className="w-3 h-3" />
-                          <span>{wish.timestamp}</span>
-                        </div>
-                      </div>
-                      <p className="text-gray-700 leading-relaxed font-medium text-base pl-13">
-                        {wish.message}
-                      </p>
-                    </div>
-                  ))
-                )}
+              <div className="flex items-center gap-1 sm:gap-2 text-[10px] xs:text-xs sm:text-xs text-gray-500 bg-white/50 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full">
+                <Calendar className="w-2 h-2 sm:w-3 sm:h-3" />
+                <span>{wish.timestamp}</span>
               </div>
             </div>
+            <p className="text-gray-700 leading-relaxed font-medium text-sm sm:text-base pl-0 sm:pl-13">
+              {wish.message}
+            </p>
           </div>
+        ))
+      )}
+    </div>
+  </div>
+</div>
         </div>
 
         {/* Footer */}
@@ -406,6 +428,34 @@ const [errorMessage, setErrorMessage] = useState('');
         .shadow-3xl {
           box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
         }
+
+        @keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.group {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.group.animate-fadeInUp {
+  opacity: 1;
+}
+
+html {
+  scroll-behavior: smooth;
+}
       `}</style>
     </div>
   );
