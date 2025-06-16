@@ -24,8 +24,8 @@ const WeddingInvitation = () => {
  
  const mobileImages = [
    '/images/mobile.jpg',
-     '/images/8.jpg',
-   '/images/9.jpg', 
+     '/images/new1.JPG',
+   '/images/new2.JPG', 
  
    '/images/background2.JPG'
  ];

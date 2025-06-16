@@ -3,10 +3,11 @@ import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion'
 
 const Gallery = () => { 
   const weddingImages = [
-    '13.png', '4.jpg', '9.jpg', '10.JPG', '11.JPG', '12.jpg', '8.jpg',
+    '13.png', '4.jpg', 'new1.JPG', '10.JPG', '11.JPG', '12.jpg', 'new2.JPG',
     '1.jpg', '2.jpg', '3.jpg', '5.JPG', '6.JPG', '7.JPG',
-     , '26.JPG', '27.JPG', '28.JPG'
+  '26.JPG', '27.JPG', '28.JPG'
   ];
+
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fullscreenOpen, setFullscreenOpen] = useState(false);
