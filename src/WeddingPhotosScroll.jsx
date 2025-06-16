@@ -10,7 +10,7 @@ const WeddingPhotosScroll = () => {
   const imageData = [
     {
       id: 'chure',
-      title: 'Chú Rể',
+      title: 'ALY DUSÔ',
       images: [
         '/images/chure.jpg',
         '/images/chure-tt.jpg'
@@ -18,7 +18,7 @@ const WeddingPhotosScroll = () => {
     },
     {
       id: 'codau', 
-      title: 'Cô Dâu',
+      title: 'HASIKIN',
       images: [
         '/images/codau.jpg',
         '/images/codau-tt.jpg'

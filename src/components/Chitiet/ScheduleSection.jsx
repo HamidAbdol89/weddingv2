@@ -246,7 +246,61 @@ const DayTwo = ({ itemVariants }) => {
       <div className="absolute inset-0 bg-gradient-to-l from-purple-50/30 to-indigo-50/30 rounded-3xl -m-8 -z-10" />
       
       <div className="grid lg:grid-cols-3 gap-12 lg:gap-8 items-center">
+      
         
+        {/* Right - Day Number & Badge */}
+        <motion.div 
+          className="lg:order-3 text-center lg:text-left space-y-8"
+          variants={detailsVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <motion.div 
+            className="relative inline-block"
+            variants={detailItemVariants}
+          >
+            <div className="text-[8rem] sm:text-[10rem] font-black bg-gradient-to-br from-purple-200 to-indigo-200 bg-clip-text text-transparent leading-none select-none">
+              02
+            </div>
+            <span className="absolute top-4 left-4 text-3xl">☀️</span>
+          </motion.div>
+          
+          <motion.div 
+            className="inline-flex items-center space-x-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-full shadow-lg"
+            variants={detailItemVariants}
+          >
+            <Users className="w-8 h-8" />
+            <span className="text-2xl font-bold">Ngày Thứ Hai</span>
+          </motion.div>
+        </motion.div>
+               {/* Center - Timeline dot */}
+        <div className="lg:order-2 flex justify-center">
+          <motion.div 
+            className="relative"
+            variants={itemVariants}
+          >
+            {/* Static connecting line */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-32 bg-gradient-to-b from-purple-300 to-indigo-300 -z-10" />
+            
+            {/* Simplified dot with subtle pulse */}
+            <motion.div 
+              className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full shadow-lg relative z-10"
+              animate={{
+                scale: [1, 1.1, 1]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5
+              }}
+            />
+            
+            {/* Static outer ring */}
+            <div className="absolute inset-0 w-8 h-8 border-4 border-purple-200 rounded-full" />
+          </motion.div>
+        </div>
         {/* Left - Event Details */}
         <motion.div 
           className="lg:order-1 space-y-6"
@@ -299,60 +353,7 @@ const DayTwo = ({ itemVariants }) => {
           </motion.div>
         </motion.div>
 
-        {/* Center - Timeline dot */}
-        <div className="lg:order-2 flex justify-center">
-          <motion.div 
-            className="relative"
-            variants={itemVariants}
-          >
-            {/* Static connecting line */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-32 bg-gradient-to-b from-purple-300 to-indigo-300 -z-10" />
-            
-            {/* Simplified dot with subtle pulse */}
-            <motion.div 
-              className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full shadow-lg relative z-10"
-              animate={{
-                scale: [1, 1.1, 1]
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-            />
-            
-            {/* Static outer ring */}
-            <div className="absolute inset-0 w-8 h-8 border-4 border-purple-200 rounded-full" />
-          </motion.div>
-        </div>
-        
-        {/* Right - Day Number & Badge */}
-        <motion.div 
-          className="lg:order-3 text-center lg:text-left space-y-8"
-          variants={detailsVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <motion.div 
-            className="relative inline-block"
-            variants={detailItemVariants}
-          >
-            <div className="text-[8rem] sm:text-[10rem] font-black bg-gradient-to-br from-purple-200 to-indigo-200 bg-clip-text text-transparent leading-none select-none">
-              02
-            </div>
-            <span className="absolute top-4 left-4 text-3xl">☀️</span>
-          </motion.div>
-          
-          <motion.div 
-            className="inline-flex items-center space-x-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white px-8 py-4 rounded-full shadow-lg"
-            variants={detailItemVariants}
-          >
-            <Users className="w-8 h-8" />
-            <span className="text-2xl font-bold">Ngày Thứ Hai</span>
-          </motion.div>
-        </motion.div>
+   
       </div>
     </motion.div>
   );

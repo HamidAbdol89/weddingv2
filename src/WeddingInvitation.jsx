@@ -285,235 +285,92 @@ const WeddingInvitation = () => {
              </div>
            </div>
 
-           {/* Text Overlay - Same as before */}
-           <div className="absolute inset-0 flex items-center pointer-events-none">
-             {/* Desktop: Right Side */}
-             <div className="hidden lg:flex lg:justify-end lg:pr-20 xl:pr-32 w-full">
-               <div className="text-right space-y-6 max-w-2xl">
-                 
-                 {/* Decorative Header */}
-                 <div className={`flex justify-end mb-8 ${fadeInUp} ${
-                   textPhase >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                 }`}>
-                   <div className="flex items-center space-x-3">
-                     <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-white/60 transition-all duration-700"></div>
-                     <Heart className="w-8 h-8 text-white animate-pulse drop-shadow-lg" />
-                     <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-white/60 transition-all duration-700"></div>
-                   </div>
-                 </div>
+      {/* Text Overlay - With Animation Phases */}
+<div className="absolute inset-0 flex items-center pointer-events-none">
+  {/* Desktop: Right Side */}
+  <div className="hidden lg:flex lg:justify-end lg:pr-20 xl:pr-32 w-full">
+    <div className="text-right space-y-6 max-w-2xl">
+      {/* Header */}
+      <div className={`mb-8 ${fadeInUp} ${
+        textPhase >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+      }`}>
+        <h2 className="text-2xl text-white font-light tracking-widest">SAVE THE DATE</h2>
+      </div>
 
-                 {/* Couple Names - Staggered Animation */}
-                 <div className="mb-12">
-                   <h1 className={`text-7xl xl:text-8xl font-serif text-white mb-4 tracking-wide drop-shadow-2xl ${slideInRight} ${
-                     textPhase >= 1 ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'
-                   }`} style={{ transitionDelay: '0.1s' }}>
-                     DUSÔ
-                   </h1>
-                   <div className={`flex items-center justify-end my-6 ${fadeInUp} ${
-                     textPhase >= 1 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-4 opacity-0 scale-95'
-                   }`} style={{ transitionDelay: '0.2s' }}>
-                     <div className="w-16 h-0.5 bg-white/60"></div>
-                     <span className="mx-4 text-white text-3xl font-light drop-shadow-lg">&</span>
-                     <div className="w-16 h-0.5 bg-white/60"></div>
-                   </div>
-                   <h1 className={`text-7xl xl:text-8xl font-serif text-white tracking-wide drop-shadow-2xl ${slideInRight} ${
-                     textPhase >= 1 ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'
-                   }`} style={{ transitionDelay: '0.3s' }}>
-                     HASIKIN
-                   </h1>
-                 </div>
+      {/* Couple Names */}
+      <div className="mb-12">
+        <h1 className={`text-7xl xl:text-8xl font-serif text-white mb-4 tracking-wide ${slideInRight} ${
+          textPhase >= 1 ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'
+        }`} style={{ transitionDelay: '0.1s' }}>
+          ALY DUSÔ
+        </h1>
+        <div className={`flex items-center justify-end my-6 ${fadeInUp} ${
+          textPhase >= 1 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-4 opacity-0 scale-95'
+        }`} style={{ transitionDelay: '0.2s' }}>
+          <div className="w-16 h-0.5 bg-white/60"></div>
+          <span className="mx-4 text-white text-3xl font-light">&</span>
+          <div className="w-16 h-0.5 bg-white/60"></div>
+        </div>
+        <h1 className={`text-7xl xl:text-8xl font-serif text-white tracking-wide ${slideInRight} ${
+          textPhase >= 1 ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'
+        }`} style={{ transitionDelay: '0.3s' }}>
+          HA SI KIN
+        </h1>
+      </div>
 
-                 {/* Invitation Text */}
-                 <div className={`mb-10 ${bounceIn} ${
-                   textPhase >= 2 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-6 opacity-0 scale-95'
-                 }`} style={{ transitionDelay: '0.1s' }}>
-                   <p className="text-2xl xl:text-3xl text-white leading-relaxed font-light drop-shadow-lg">
-                     Trân trọng kính mời bạn tham dự
-                   </p>
-                   <p className="text-3xl xl:text-4xl text-white font-medium mt-3 drop-shadow-lg">
-                      Hồn Lê Được Cử Hành
-                   </p>
-                 </div>
+      {/* Invitation Text */}
+      <div className={`mb-10 ${bounceIn} ${
+        textPhase >= 2 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-6 opacity-0 scale-95'
+      }`} style={{ transitionDelay: '0.1s' }}>
+        <p className="text-3xl xl:text-4xl text-white font-medium">
+          INVITED YOU TO MY WEDDING PARTY
+        </p>
+      </div>
+    </div>
+  </div>
 
-                 {/* Wedding Details - Staggered */}
-                  <div className="space-y-4 text-white">
-                    {/* Date */}
-                    <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
-                      textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
-                    }`} style={{ transitionDelay: '0.05s' }}>
-                      <div className="text-right">
-                        <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg">
-                          12 Tháng 7 (Tối Thứ 7)
-                        </p>
-                        <p className="text-lg text-white/80 drop-shadow-lg">
-                          Thời gian: 19:00PM
-                        </p>
-                        <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg mt-2">
-                          13 Tháng 7 (Sáng Chủ Nhật)
-                        </p>
-                        <p className="text-lg text-white/80 drop-shadow-lg">
-                          Thời gian: 8:00AM
-                        </p>
-                      </div>
-                      <Calendar className="w-8 h-8 text-white drop-shadow-lg" />
-                    </div>
+  {/* Mobile & Tablet: Center */}
+  <div className="lg:hidden flex justify-center w-full px-4">
+    <div className="text-center space-y-4 max-w-sm">
+      {/* Header */}
+      <div className={`mb-6 ${bounceIn} ${
+        textPhase >= 1 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-4 opacity-0 scale-90'
+      }`}>
+        <h2 className="text-xl text-white font-light tracking-widest">SAVE THE DATE</h2>
+      </div>
 
+      {/* Couple Names */}
+      <div className="mb-8">
+        <h1 className={`text-4xl font-serif text-white mb-3 tracking-wide ${fadeInUp} ${
+          textPhase >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+        }`} style={{ transitionDelay: '0.1s' }}>
+          ALY DUSÔ
+        </h1>
+        <div className={`flex items-center justify-center my-4 ${bounceIn} ${
+          textPhase >= 1 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-4 opacity-0 scale-95'
+        }`} style={{ transitionDelay: '0.2s' }}>
+          <div className="w-12 h-0.5 bg-white/60"></div>
+          <span className="mx-3 text-white text-xl font-light">&</span>
+          <div className="w-12 h-0.5 bg-white/60"></div>
+        </div>
+        <h1 className={`text-4xl font-serif text-white tracking-wide ${fadeInUp} ${
+          textPhase >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+        }`} style={{ transitionDelay: '0.3s' }}>
+          HA SI KIN
+        </h1>
+      </div>
 
-                   {/* Time */}
-                   <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
-                     textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
-                   }`} style={{ transitionDelay: '0.15s' }}>
-                     <div className="text-right">
-                       <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg">
-                         Sáng 8:00 AM
-                       </p>
-                       <p className="text-lg text-white/80 drop-shadow-lg">
-                         Tại tư gia nhà gái
-                       </p>
-                     </div>
-                     <Clock className="w-8 h-8 text-white drop-shadow-lg" />
-                   </div>
-
-                    {/* Location */}
-                    <div className={`flex items-center justify-end space-x-4 ${slideInRight} ${
-                      textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
-                    }`} style={{ transitionDelay: '0.25s' }}>
-                      <div className="text-right">
-                        <p className="text-2xl xl:text-3xl font-medium drop-shadow-lg">
-                          Số nhà 232, Tổ 3 
-                        </p>
-                        <p className="text-lg text-white/80 drop-shadow-lg">
-                          Ấp Châu Giang, Xã Châu Phong, TX Tân Châu, Tỉnh An Giang
-                        </p>
-                      </div>
-                      <MapPin className="w-8 h-8 text-white drop-shadow-lg" />
-                    </div>
-                  </div>
-
-                 {/* Quote */}
-                 <div className={`mt-12 pt-8 border-t border-white/30 ${fadeInUp} ${
-                   textPhase >= 4 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                 }`} style={{ transitionDelay: '0.3s' }}>
-                   <p className="text-lg text-white/90 italic drop-shadow-lg">
-                     "Tình yêu không chỉ là nhìn vào mắt nhau,<br />mà là cùng nhau nhìn về một hướng"
-                   </p>
-                 </div>
-               </div>
-             </div>
-
-             {/* Mobile & Tablet: Center with Improved Animation */}
-             <div className="lg:hidden flex justify-center w-full px-4 sm:px-6">
-               <div className="text-center space-y-4 sm:space-y-6 max-w-sm sm:max-w-md">
-                 
-                 {/* Decorative Header */}
-                 <div className={`flex justify-center mb-6 ${bounceIn} ${
-                   textPhase >= 1 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-4 opacity-0 scale-90'
-                 }`}>
-                   <div className="flex items-center space-x-2">
-                     <div className="w-8 h-0.5 bg-gradient-to-r from-transparent to-white/60"></div>
-                     <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-white animate-pulse drop-shadow-lg" />
-                     <div className="w-8 h-0.5 bg-gradient-to-l from-transparent to-white/60"></div>
-                   </div>
-                 </div>
-
-                 {/* Couple Names - Mobile Optimized */}
-                 <div className="mb-8">
-                   <h1 className={`text-4xl sm:text-5xl md:text-6xl font-serif text-white mb-3 tracking-wide drop-shadow-2xl ${fadeInUp} ${
-                     textPhase >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                   }`} style={{ transitionDelay: '0.1s' }}>
-                     DUSÔ
-                   </h1>
-                   <div className={`flex items-center justify-center my-4 ${bounceIn} ${
-                     textPhase >= 1 ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-4 opacity-0 scale-95'
-                   }`} style={{ transitionDelay: '0.2s' }}>
-                     <div className="w-12 sm:w-16 h-0.5 bg-white/60"></div>
-                     <span className="mx-3 sm:mx-4 text-white text-xl sm:text-2xl font-light drop-shadow-lg">&</span>
-                     <div className="w-12 sm:w-16 h-0.5 bg-white/60"></div>
-                   </div>
-                   <h1 className={`text-4xl sm:text-5xl md:text-6xl font-serif text-white tracking-wide drop-shadow-2xl ${fadeInUp} ${
-                     textPhase >= 1 ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
-                   }`} style={{ transitionDelay: '0.3s' }}>
-                     HASIKIN
-                   </h1>
-                 </div>
-
-                 {/* Invitation Text - Compact for Mobile */}
-               <div className={`mb-6 sm:mb-8 ${fadeInUp} ${
-                  textPhase >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                }`} style={{ transitionDelay: '0.1s' }}>
-                  <p className="text-base sm:text-lg text-white leading-relaxed font-light drop-shadow-lg">
-                    Trân trọng kính mời bạn tham dự
-                  </p>
-                  <p className="text-lg sm:text-xl text-white font-medium mt-2 drop-shadow-lg">
-                    Hồn Lê Được Cử Hành
-                  </p>
-                </div>
-
-               {/* Wedding Details - Compact Mobile Layout */}
-              <div className="space-y-3 text-white">
-                {/* Date */}
-                <div className={`flex items-center justify-center space-x-3 ${slideInRight} ${
-                  textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-                }`} style={{ transitionDelay: '0.05s' }}>
-                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg flex-shrink-0" />
-                  <div className="text-center">
-                    <p className="text-sm sm:text-base font-medium drop-shadow-lg">
-                      12 Tháng 7 (Tối Thứ 7)
-                    </p>
-                    <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg">
-                      Thời gian: 19:00PM
-                    </p>
-                    <p className="text-sm sm:text-base font-medium drop-shadow-lg mt-1">
-                      13 Tháng 7 (Sáng Chủ Nhật)
-                    </p>
-                    <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg">
-                      Thời gian: 8:00AM
-                    </p>
-                  </div>
-                </div>
-
-                   {/* Time */}
-                   <div className={`flex items-center justify-center space-x-3 ${slideInRight} ${
-                     textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-                   }`} style={{ transitionDelay: '0.15s' }}>
-                     <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg flex-shrink-0" />
-                     <div className="text-center">
-                       <p className="text-sm sm:text-base font-medium drop-shadow-lg">
-                         Sáng 8:00 AM
-                       </p>
-                       <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg">
-                         Tại tư gia nhà gái
-                       </p>
-                     </div>
-                   </div>
-
-                  {/* Location */}
-  <div className={`flex items-start justify-center space-x-3 ${slideInRight} ${
-    textPhase >= 3 ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
-  }`} style={{ transitionDelay: '0.25s' }}>
-    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white drop-shadow-lg flex-shrink-0 mt-1" />
-    <div className="text-center">
-      <p className="text-sm sm:text-base font-medium drop-shadow-lg">
-        Số nhà 232, Tổ 3 
-      </p>
-      <p className="text-xs sm:text-sm text-white/80 drop-shadow-lg leading-tight">
-        Ấp Châu Giang, Xã Châu Phong<br />TX Tân Châu, Tỉnh An Giang
-      </p>
+      {/* Invitation Text */}
+      <div className={`mb-6 ${fadeInUp} ${
+        textPhase >= 2 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+      }`} style={{ transitionDelay: '0.1s' }}>
+        <p className="text-xl text-white font-medium">
+          INVITED YOU TO MY WEDDING PARTY
+        </p>
+      </div>
     </div>
   </div>
 </div>
-
-                 {/* Quote - Mobile Compact */}
-                 <div className={`mt-6 pt-4 border-t border-white/30 ${fadeInUp} ${
-                   textPhase >= 4 ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                 }`} style={{ transitionDelay: '0.3s' }}>
-                   <p className="text-xs sm:text-sm text-white/90 italic drop-shadow-lg leading-relaxed">
-                     "Tình yêu không chỉ là nhìn vào mắt nhau,<br />mà là cùng nhau nhìn về một hướng"
-                   </p>
-                 </div>
-               </div>
-             </div>
-           </div>
          </div>
        )}
      </div>

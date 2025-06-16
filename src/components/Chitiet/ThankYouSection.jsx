@@ -74,10 +74,11 @@ const ThankYouSection = ({ getSectionClass }) => {
             <div className="absolute -bottom-4 -right-4 w-16 h-16 border-b-2 border-r-2 border-rose-200"></div>
             
             <p className="text-xl sm:text-2xl font-light leading-relaxed text-rose-900/80 max-w-3xl mx-auto px-6 py-8">
-              Alhamdulillah, với lòng biết ơn sâu sắc, chúng tôi xin gửi lời cảm tạ chân thành đến tất cả những ai đã hiện diện và cầu nguyện cho đôi lứa chúng tôi trong ngày Nikah thiêng liêng.  
-              <br /><br />
-              Sự hiện diện của quý vị là ni'mah từ Allah, và những lời chúc phúc làn gió lành mang theo barakah. Nguyện Allah ghi nhận tấm lòng của quý vị và ban cho tất cả chúng ta hạnh phúc, iman kiên định và một đời sống đầy rahmah.
-            </p>
+  Cảm ơn sự hiện diện của bạn trong ngày trọng đại của chúng tôi. Sự có mặt của bạn là món quà ý nghĩa nhất. <br /><br />
+  Chúng tôi trân trọng sự hiện diện của bạn trong ngày lễ thành hôn. Sự góp mặt của bạn làm cho ngày vui của chúng tôi thêm trọn vẹn. <br /><br />
+  Cảm ơn bạn đã dành thời gian quý báu để đến chung vui với chúng tôi. Sự hiện diện của bạn là niềm vinh dự cho chúng tôi.
+</p>
+
           </motion.div>
 
           {/* Signature */}

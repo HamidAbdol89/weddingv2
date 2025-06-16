@@ -1,5 +1,5 @@
 import { motion, useTransform, useScroll } from 'framer-motion';
-import { Flower, Crown, Heart } from 'lucide-react';
+import { Flower, Heart } from 'lucide-react';
 import { useMemo } from 'react';
 
 const FamilySection = ({ getSectionClass, isPreloading }) => {
@@ -389,7 +389,7 @@ const FamilyMemberImage = ({ imgSrc, alt, gradientFrom, gradientTo, isMobile }) 
         ease: "easeInOut"
       }}
     >
-      <Crown className="w-6 h-6 text-blue-500" />
+<Heart className="w-5 h-5 text-rose-500 fill-rose-500" />
     </motion.div>
   </motion.div>
 );

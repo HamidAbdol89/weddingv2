@@ -166,7 +166,7 @@ const MailForm = () => {
                   onChange={handleInputChange}
                   required
                   className="w-full px-5 py-3 text-base rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent bg-white/90 transition-all duration-200 placeholder-pink-300"
-                  placeholder="Mohamed..."
+                  placeholder="Nhập tên của bạn"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <Users className="w-5 h-5 text-pink-300" />
@@ -190,7 +190,7 @@ const MailForm = () => {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className="w-full px-5 py-3 text-base rounded-xl border border-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent bg-white/90 transition-all duration-200 placeholder-pink-300"
-                  placeholder="09xx"
+                  placeholder="Số điện thoại của bạn"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                   <Phone className="w-5 h-5 text-pink-300" />
